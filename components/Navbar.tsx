@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Search, Briefcase, LayoutDashboard, Bookmark } from 'lucide-react';
-import LoginButton from './LoginButton';
+import GoogleLoginButton from "@/components/GoogleLoginButton";
 
 export default function Navbar() {
   return (
@@ -25,7 +25,7 @@ export default function Navbar() {
             <LayoutDashboard className="h-4 w-4" />
             Dashboard
           </Link>
-          <LoginButton />
+          <GoogleLoginButton />
         </nav>
       </div>
     </header>

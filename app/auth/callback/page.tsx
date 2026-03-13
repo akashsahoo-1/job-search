@@ -1,25 +1,24 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabaseClient"
 
-export default function AuthCallback() {
-  const router = useRouter();
+export default function CallbackPage() {
+  const router = useRouter()
 
   useEffect(() => {
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const finishLogin = async () => {
+      await supabase.auth.getSession()
+      router.push("/")
+    }
 
-    const handleAuth = async () => {
-      await supabase.auth.getSession();
-      router.push("/");
-    };
+    finishLogin()
+  }, [router])
 
-    handleAuth();
-  }, [router]);
-
-  return <p className="text-center mt-20">Signing you in...</p>;
+  return (
+    <div className="flex justify-center mt-20">
+      Signing you in...
+    </div>
+  )
 }
