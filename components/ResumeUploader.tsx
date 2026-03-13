@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Upload, FileText, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { createClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 interface MatchResult {
   matchScore: number;
@@ -32,8 +32,7 @@ export default function ResumeUploader({ jobDescription }: { jobDescription: str
     setLoading(true);
     setResult(null);
 
-    const supabase = createClient();
-    
+
     try {
       const fileName = `${Date.now()}-${file.name}`;
       const { data, error } = await supabase.storage.from("resumes").upload(fileName, file);
