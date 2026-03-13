@@ -29,13 +29,11 @@ export default function LoginButton() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`
+        redirectTo: "https://job-search-brown-ten.vercel.app"
       }
     });
 
-    if (error) {
-      console.error("OAuth error:", error);
-    }
+    if (error) console.error(error);
 
     if (data?.url) {
       window.location.href = data.url;
