@@ -20,13 +20,17 @@ export default function LoginButton() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
+  const loginWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://job-search-brown-ten.vercel.app"
+        redirectTo: `${window.location.origin}/auth/callback`
       }
     });
+
+    if (error) {
+      console.error("OAuth error:", error);
+    }
   };
 
   const handleLogout = async () => {
@@ -52,7 +56,7 @@ export default function LoginButton() {
 
   return (
     <button
-      onClick={handleLogin}
+      onClick={loginWithGoogle}
       className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition text-sm"
     >
       Sign In
