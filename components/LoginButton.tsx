@@ -29,7 +29,7 @@ export default function LoginButton() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "https://job-search-brown-ten.vercel.app"
+        redirectTo: "https://job-search-brown-ten.vercel.app/auth/callback"
       }
     });
 
