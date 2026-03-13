@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr";
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function LoginButton() {
   const [user, setUser] = useState<any>(null);
@@ -21,7 +26,7 @@ export default function LoginButton() {
   }, []);
 
   const loginWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`
@@ -30,6 +35,10 @@ export default function LoginButton() {
 
     if (error) {
       console.error("OAuth error:", error);
+    }
+
+    if (data?.url) {
+      window.location.href = data.url;
     }
   };
 

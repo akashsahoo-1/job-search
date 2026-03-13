@@ -21,5 +21,5 @@ export default function AuthCallback() {
     handleAuth();
   }, [router]);
 
-  return <p className="text-center mt-20 text-gray-500 dark:text-gray-400">Signing you in...</p>;
+  return <p className="text-center mt-20">Signing you in...</p>;
 }
