@@ -1,25 +1,26 @@
-"use client"
+"use client";
 
-import { supabase } from "@/lib/supabaseClient"
+import { supabase } from "@/lib/supabaseClient";
 
 export default function GoogleLoginButton() {
+
   const handleLogin = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: "https://job-search-brown-ten.vercel.app/auth/callback"
       }
-    })
+    });
 
     if (error) {
-      console.error(error)
-      return
+      console.error("OAuth error:", error);
+      return;
     }
 
     if (data?.url) {
-      window.location.href = data.url
+      window.location.href = data.url;
     }
-  }
+  };
 
   return (
     <button
@@ -28,5 +29,5 @@ export default function GoogleLoginButton() {
     >
       Sign in with Google
     </button>
-  )
+  );
 }
