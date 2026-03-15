@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "AI Job Search",
-  description: "Search, filter, and match jobs using AI",
+  title: "ScoutFlow AI - Job Search Co-pilot",
+  description: "Find and organize jobs using Firecrawl-powered discovery and AI matching.",
 };
 
 export default function RootLayout({
@@ -18,9 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <Navbar />
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <main className="min-h-screen">
           {children}
         </main>
         <Toaster />

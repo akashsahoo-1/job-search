@@ -1,6 +1,5 @@
 {
+  "/search/[query]/page": "app/search/[query]/page.js",
   "/page": "app/page.js",
-  "/api/search/route": "app/api/search/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/search/[query]/page": "app/search/[query]/page.js"
+  "/main/page": "app/main/page.js"
 }
