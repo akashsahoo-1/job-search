@@ -1,4 +1,4 @@
-// File: C:\coding files\akash\job-search\app\page.tsx
+// File: C:\Job-Search\job-search\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
