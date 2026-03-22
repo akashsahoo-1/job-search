@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { toast } from "sonner";
-import { firebaseAuth } from "@/lib/firebaseClient";
+import { auth } from "@/lib/firebase";
 
 type SearchBarProps = {
   initialQuery?: string;
@@ -24,9 +24,27 @@ export default function SearchBar({
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const router = useRouter();
+  const initialMount = useRef(true);
+
+  // Implement Debounce for Live Search
+  useEffect(() => {
+    // Avoid running on very first mount
+    if (initialMount.current) {
+        initialMount.current = false;
+        return;
+    }
+
+    const timeoutId = setTimeout(() => {
+        if (query.trim() && query.trim().length >= 2) {
+            router.push(`/search/${encodeURIComponent(query.trim())}`);
+        }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query, router]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setAuthLoading(false);
     });
@@ -50,30 +68,24 @@ export default function SearchBar({
   const disabled = authLoading || !user;
 
   return (
-    <form onSubmit={handleSearch} className={`relative w-full flex items-center ${className}`}>
-      <Search className="absolute left-4 h-5 w-5 text-slate-400" />
+    <form onSubmit={handleSearch} className="relative w-full flex items-center group">
+      <Search className="absolute left-5 h-6 w-6 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder={
-          disabled
-            ? "Sign in with Google to start searching jobs"
-            : "Try: Product designer remote, AI engineer, or data analyst in Bengaluru"
-        }
+        placeholder="Job title, keywords, or company..."
         disabled={disabled}
-        className={`w-full ${compact ? "h-12 text-base" : "h-16 text-lg"} pl-12 ${showSubmitButton ? "pr-36" : "pr-5"} rounded-full border border-slate-200 bg-white/95 shadow-[0_20px_45px_-30px_rgba(15,23,42,0.45)] focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent text-slate-900 placeholder:text-slate-400 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500`}
+        className="w-full h-16 pl-14 pr-36 rounded-2xl border-2 border-gray-200 bg-white text-lg shadow-sm focus:outline-none focus:ring-0 focus:border-blue-500 dark:bg-[#0f172a] dark:border-gray-800 dark:text-white transition-all disabled:opacity-50"
         required
       />
-      {showSubmitButton && (
-        <button
-          type="submit"
-          disabled={disabled}
-          className={`absolute right-2 ${compact ? "h-8 px-4 text-sm" : "h-12 px-6"} bg-slate-900 hover:bg-slate-700 text-white font-medium rounded-full transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed`}
-        >
-          {disabled ? "Login Required" : "Find Jobs"}
-        </button>
-      )}
+      <button
+        type="submit"
+        disabled={disabled}
+        className="absolute right-3 h-10 px-6 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition-all shadow-md active:scale-95 disabled:bg-gray-500 disabled:cursor-not-allowed"
+      >
+        Search
+      </button>
     </form>
   );
 }

@@ -10,7 +10,7 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
-import { firebaseAuth, googleProvider } from "@/lib/firebaseClient";
+import { auth, provider } from "@/lib/firebase";
 
 type GoogleLoginButtonProps = {
   redirectTo?: string;
@@ -18,13 +18,13 @@ type GoogleLoginButtonProps = {
 
 export default function GoogleLoginButton({
   redirectTo = "/main",
-}: GoogleLoginButtonProps) {
+}: GoogleLoginButtonProps = {}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
@@ -34,7 +34,7 @@ export default function GoogleLoginButton({
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(firebaseAuth, googleProvider);
+      await signInWithPopup(auth, provider);
       if (redirectTo) {
         router.push(redirectTo);
       }
@@ -44,7 +44,11 @@ export default function GoogleLoginButton({
   };
 
   const handleLogout = async () => {
-    await signOut(firebaseAuth);
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Firebase sign-out failed:", error);
+    }
   };
 
   if (loading) {
